@@ -13,7 +13,7 @@ func New() *Lrus {
 	l := &Lrus{Log: logrus.New()}
 	l.Log.Formatter = &logrus.TextFormatter{
 		DisableColors:   true,
-		TimestampFormat: "02-01-2006 15:04:05",
+		TimestampFormat: "02.01.2006 15:04:05",
 		FullTimestamp:   true,
 	}
 	return l

@@ -1,0 +1,13 @@
+httpsrv = "127.0.0.1:9091"
+cachetick = 10 #in seconds
+
+[logger]
+level = "INFO"
+logfile = "./log.txt"
+
+[db]
+dsn = "mongodb://127.0.0.1"
+db = "RB"
+collection = "example"
+# TODO
+# ...
