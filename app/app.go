@@ -12,10 +12,10 @@ type App struct {
 	Cache cache.CacheInterface
 }
 
-func New(logger logger.Logger, storage storage.Storage) *App {
+func New(logger logger.Logger, storage storage.Storage, cache cache.CacheInterface) *App {
 	return &App{
 		Log:   logger,
 		Store: storage,
-		//Cache: cache,
+		Cache: cache,
 	}
 }

@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Students</title>
+</head>
+<body>
+<h2>Students</h2>
+<ul>
+    {{range .}}
+    <li><b>ID: </b>{{ .Id}}</li>
+    <li><b>First name: </b>{{ .FirstName}}</li>
+    <li><b>SecondName: </b>{{ .SecondName}}</li>
+    <li><b>Faculty: </b>{{ .Faculty}}</li>
+    <li><b>Date of birth: </b>{{ .BirthDate}}</li>
+    <p></p>
+    {{end}}
+</ul>
+</body>
+</html>

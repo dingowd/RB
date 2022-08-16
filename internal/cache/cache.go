@@ -4,12 +4,11 @@ import (
 	"github.com/dingowd/RB/internal/logger"
 	"github.com/dingowd/RB/internal/storage"
 	"github.com/dingowd/RB/model"
-	"sync"
 	"time"
 )
 
 type CacheInterface interface {
-	ReadFromCache() *model.CacheStudents
+	ReadFromCache() model.CacheStudents
 	WriteToCache(stop chan struct{})
 }
 
@@ -29,16 +28,11 @@ func NewCache(log logger.Logger, store storage.Storage, t int) *Cache {
 	}
 }
 
-func (c *Cache) ReadFromCache() *model.CacheStudents {
-	cache := make(model.CacheStudents, 0)
-	if len(c.Body) > 0 {
-		cache = c.Body
-	}
-	return &cache
+func (c *Cache) ReadFromCache() model.CacheStudents {
+	return c.Body
 }
 
 func (c *Cache) WriteToCache(stop chan struct{}) {
-	var mu sync.Mutex
 	empty := make(model.CacheStudents, 0)
 	for {
 		select {
@@ -47,7 +41,6 @@ func (c *Cache) WriteToCache(stop chan struct{}) {
 		default:
 			d := new(model.Students)
 			d, _ = c.Store.GetAll()
-			mu.Lock()
 			c.Body = empty
 			for _, v := range *d {
 				var e model.CacheStudent
@@ -59,7 +52,6 @@ func (c *Cache) WriteToCache(stop chan struct{}) {
 				e.BirthDate = tm.Format("02.01.2006")
 				c.Body = append(c.Body, e)
 			}
-			mu.Unlock()
 			time.Sleep(time.Duration(c.Tick) * time.Second)
 		}
 	}

@@ -5,9 +5,9 @@ import (
 	"github.com/dingowd/RB/app"
 	"github.com/dingowd/RB/model"
 	"github.com/gorilla/mux"
+	"html/template"
 	"net/http"
 	"sync"
-	"time"
 )
 
 type Server struct {
@@ -24,6 +24,11 @@ func NewServer(app *app.App, addr string) *Server {
 
 func (s *Server) Delete(w http.ResponseWriter, r *http.Request) {
 	id := r.URL.Query().Get("id")
+	if len(id) == 0 {
+		w.WriteHeader(http.StatusBadRequest)
+		w.Write([]byte("id is missing!!!"))
+		return
+	}
 	err := s.App.Store.Delete(id)
 	if err != nil {
 		w.Write([]byte(err.Error()))
@@ -49,29 +54,14 @@ func (s *Server) Update(w http.ResponseWriter, r *http.Request) {
 }
 
 func (s *Server) GetAll(w http.ResponseWriter, r *http.Request) {
-	d, err := s.App.Store.GetAll()
-	if err != nil {
-		w.Write([]byte(err.Error()))
-		return
-	}
-	c := make(model.CacheStudents, 0)
-	for _, v := range *d {
-		var e model.CacheStudent
-		e.Id = v.Id.Hex()
-		e.FirstName = v.FirstName
-		e.SecondName = v.SecondName
-		e.Faculty = v.Faculty
-		tm := time.Unix(v.BirthDate, 0)
-		e.BirthDate = tm.Format("02.01.2006")
-		c = append(c, e)
-	}
-	//c := s.App.Cache.ReadFromCache()
-	b, err := json.MarshalIndent(c, "\t", " ")
-	if err != nil {
-		w.Write([]byte(err.Error()))
-		return
-	}
-	w.Write(b)
+	c := s.App.Cache.ReadFromCache()
+	/*	b, err := json.MarshalIndent(c, "\t", " ")
+		if err != nil {
+			w.Write([]byte(err.Error()))
+			return
+		}*/
+	tmpl, _ := template.ParseFiles("./templates/index.html")
+	tmpl.Execute(w, c)
 }
 
 func (s *Server) Insert(w http.ResponseWriter, r *http.Request) {

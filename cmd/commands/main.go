@@ -60,7 +60,7 @@ func main() {
 	go cache.WriteToCache(stop)
 
 	// Init app
-	app := app.New(logg, store)
+	app := app.New(logg, store, cache)
 
 	// init http server
 	server := server.NewServer(app, conf.HTTPSrv)
