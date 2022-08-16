@@ -4,16 +4,17 @@ import (
 	"encoding/json"
 	"github.com/dingowd/RB/app"
 	"github.com/dingowd/RB/model"
-	"net/http"
-	"time"
-
 	"github.com/gorilla/mux"
+	"net/http"
+	"sync"
+	"time"
 )
 
 type Server struct {
 	App  *app.App
 	Addr string
 	Srv  *http.Server
+	mu   sync.Mutex
 }
 
 func NewServer(app *app.App, addr string) *Server {
@@ -64,8 +65,9 @@ func (s *Server) GetAll(w http.ResponseWriter, r *http.Request) {
 		e.BirthDate = tm.Format("02.01.2006")
 		c = append(c, e)
 	}
-	b, err2 := json.MarshalIndent(c, "\t", " ")
-	if err2 != nil {
+	//c := s.App.Cache.ReadFromCache()
+	b, err := json.MarshalIndent(c, "\t", " ")
+	if err != nil {
 		w.Write([]byte(err.Error()))
 		return
 	}

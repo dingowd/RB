@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"github.com/BurntSushi/toml"
 	"github.com/dingowd/RB/app"
+	c "github.com/dingowd/RB/internal/cache"
 	"github.com/dingowd/RB/internal/config"
 	"github.com/dingowd/RB/internal/logger/lrus"
 	"github.com/dingowd/RB/internal/storage"
@@ -52,10 +53,11 @@ func main() {
 		store.Close()
 	}()
 
-	/*	// Init cache
-		var cache с.CacheInterface
-		cache = с.NewCache(logg, store, conf.CacheTick)
-		cache.Init()*/
+	// Init cache
+	var cache c.CacheInterface
+	stop := make(chan struct{})
+	cache = c.NewCache(logg, store, conf.CacheTick)
+	go cache.WriteToCache(stop)
 
 	// Init app
 	app := app.New(logg, store)
@@ -69,6 +71,7 @@ func main() {
 		<-exit
 		logg.Info("Приложение останавливается")
 		server.Stop()
+		stop <- struct{}{}
 		logg.Info("Приложение остановлено")
 		time.Sleep(5 * time.Second)
 	}()
