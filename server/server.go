@@ -55,11 +55,6 @@ func (s *Server) Update(w http.ResponseWriter, r *http.Request) {
 
 func (s *Server) GetAll(w http.ResponseWriter, r *http.Request) {
 	c := s.App.Cache.ReadFromCache()
-	/*	b, err := json.MarshalIndent(c, "\t", " ")
-		if err != nil {
-			w.Write([]byte(err.Error()))
-			return
-		}*/
 	tmpl, _ := template.ParseFiles("./templates/index.html")
 	tmpl.Execute(w, c)
 }

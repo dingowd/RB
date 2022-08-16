@@ -33,6 +33,7 @@ func (c *Cache) ReadFromCache() model.CacheStudents {
 }
 
 func (c *Cache) WriteToCache(stop chan struct{}) {
+	c.Log.Info("Кэш запускается")
 	empty := make(model.CacheStudents, 0)
 	for {
 		select {

@@ -1,13 +1,11 @@
-httpsrv = "127.0.0.1:9091"
+httpsrv = "127.0.0.1:9091" #enter the http server address
 cachetick = 10 #in seconds
 
 [logger]
 level = "INFO"
-logfile = "./log.txt"
+logfile = "./log.txt" #path to log file
 
 [db]
-dsn = "mongodb://127.0.0.1"
-db = "RB"
-collection = "example"
-# TODO
-# ...
+dsn = "mongodb://127.0.0.1" #enter the connection
+db = "RB" #enter the name of database
+collection = "example" #enter the name of collection

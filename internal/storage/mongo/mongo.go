@@ -24,9 +24,14 @@ func New(log logger.Logger, conf *config.Config) *StoreM {
 
 func (s *StoreM) Connect(ctx context.Context, dsn string) error {
 	var err error
+	s.Log.Info("Установка соединения с БД")
 	s.Session, err = mgo.Dial(s.Conf.DB.DSN)
+	if err != nil {
+		msg := "Ошибка соединения с БД: " + err.Error()
+		s.Log.Error(msg)
+	}
 	s.Collection = s.Session.DB(s.Conf.DB.DB).C(s.Conf.DB.Collection)
-	return err
+	return nil
 }
 
 func (s *StoreM) Close() {

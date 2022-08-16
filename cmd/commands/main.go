@@ -41,6 +41,8 @@ func main() {
 	} else {
 		logg.SetOutput(os.Stdout)
 	}
+	logg.Info("Приложение запускается")
+
 	// init storage
 	var store storage.Storage
 	store = mongo.New(logg, conf)
@@ -69,10 +71,10 @@ func main() {
 	signal.Notify(exit, os.Interrupt, syscall.SIGTERM)
 	go func() {
 		<-exit
-		logg.Info("Приложение останавливается")
 		server.Stop()
-		stop <- struct{}{}
 		logg.Info("Приложение остановлено")
+		logg.Info("Кэш остановлен")
+		stop <- struct{}{}
 		time.Sleep(5 * time.Second)
 	}()
 
